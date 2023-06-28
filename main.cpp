@@ -1,4 +1,4 @@
-﻿#include<iostream>
+#include<iostream>
 #include<Windows.h>
 #include<conio.h>
 #include <time.h>
@@ -12,7 +12,7 @@ int x, y, Apple_x[5], Apple_y[5];
 int coord_X[100], coord_Y[100];
 
 /*
-* направление движения змейки
+* направление движения змейки 
 */
 enum side_go {
     UP,
@@ -23,9 +23,11 @@ enum side_go {
 
 side_go to_go;
 
-/*
-    @return состояние победы
-    @param a - счёт набранный игроком
+/* Функция проверки статуса победы
+    @return состояние победы:
+        true - победа
+        false - поражение
+    @param a - счёт набранный игроком (кол-во съеденных яблок)
 */
 bool Check_finish(int a) {
     if (a >= 100)
@@ -34,7 +36,8 @@ bool Check_finish(int a) {
         return false;
 }
 
-/*
+/* Функция актуальной длины змейки
+* @param a - игровой счет (кол-во схеденных яблок)
 * @return длина змейки
 */
 int size(int a) {
@@ -45,6 +48,8 @@ int size(int a) {
 /*
 * Функция проверки доступности координаты сгенерированного яблока.
     @return статус ячейки
+        true - ячейка под яблоко свободна
+        false - ячейка под яблоко занята
     @param k - номер проверяемого яблока
 */
 bool check_apple(int k) {
@@ -63,17 +68,18 @@ bool check_apple(int k) {
 * Настройка игры, размеров поля, начального положения змейки и фруктов. Выполняется 1 раз.
 */
 void Settings() {
-    srand(time(NULL));
+    srand(time(NULL)); 
 
-    game_over = false;
+    game_over = false; 
     to_go = RIGHT;
+    //задание начального положения змейки и направления её движения
     x = 2;
     y = 0;
     coord_X[1] = 1;
     coord_X[2] = 0;
     coord_Y[2] = 0;
     coord_Y[1] = 0;
-
+    //цикл заполнения координат поле яблоками (включает в себя проверку клеток под яблоко)
     for (int i = 0; i < 5; i++) {
         do {
             Apple_x[i] = rand() % (width - 2);
@@ -81,7 +87,7 @@ void Settings() {
         } while (check_apple(i));
     }
 
-    count = 0;
+    count = 0; //игровой счёт
 }
 
 /*
@@ -89,10 +95,11 @@ void Settings() {
 */
 void Print() {
     system("cls");
-    for (int i = 0; i < width + 1; i++)
+    for (int i = 0; i < width + 1; i++) //верхняя граница
         std::cout << (char)219;
     std::cout << std::endl;
 
+    // заполнение внутренней части поля
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
             bool ex = false;
@@ -100,11 +107,12 @@ void Print() {
             for (int k = 0; k < 5; k++)
                 if (j == Apple_x[k] and i == Apple_y[k])
                     ex = true;
+            
 
-
-            if (j == 0 || j == width - 1)
+            if (j == 0 || j == width - 1) //боковые границы
                 std::cout << (char)219;
-            if (i == y && j == x)
+
+            if (i == y && j == x) //рисовка змеи + яблока
                 std::cout << "0";
             else if (ex)
                 std::cout << (char)254;
@@ -139,9 +147,9 @@ void Input() {
     if (_kbhit()) {
         char symbol = tolower(_getch());
 
-        switch (symbol)
+        switch (symbol) //обработка поворота змейки:
         {
-        case 'a':
+        case 'a':       //налево относительно направления движения
             if (to_go == UP)
                 to_go = LEFT;
             else if (to_go == RIGHT)
@@ -151,7 +159,7 @@ void Input() {
             else if (to_go == LEFT)
                 to_go = DOWN;
             break;
-        case 'd':
+        case 'd':           //направо относительно направления движения
             if (to_go == UP)
                 to_go = RIGHT;
             else if (to_go == RIGHT)
@@ -162,7 +170,7 @@ void Input() {
                 to_go = UP;
             break;
 
-        case ' ':
+        case ' ':       //выход из игры
             game_over = true;
             break;
         }
@@ -181,7 +189,7 @@ void Game() {
     coord_X[0] = x;
     coord_Y[0] = y;
 
-    for (int i = 1; i < size(count); i++) {
+    for (int i = 1; i < size(count); i++) { //цикл сдвига вправо
         pred_x = coord_X[i];
         pred_y = coord_Y[i];
 
@@ -191,7 +199,8 @@ void Game() {
         last_x = pred_x;
         last_y = pred_y;
     }
-
+    
+    //движение головы
     switch (to_go)
     {
     case LEFT:
@@ -207,7 +216,7 @@ void Game() {
         y = y + 1;
         break;
     }
-
+    //проверка на выход за границы
     if (x >= width - 1)
         x = 0;
     else if (x < 0)
@@ -218,11 +227,12 @@ void Game() {
     else if (y < 0)
         y = height - 1;
 
-    for (int i = 0; i < count; i++) {
+    //проверка пересечения себя самой
+    for (int i = 0; i < size(count); i++) {
         if (coord_X[i] == x and coord_Y[i] == y)
             game_over = true;
     }
-
+    //заполнение пустых позиций яблоками
     for (int i = 0; i < 5; i++) {
         if (x == Apple_x[i] and y == Apple_y[i]) {
             count += 1;
@@ -234,6 +244,9 @@ void Game() {
     }
 
 }
+
+//*главная функция
+// @return 0 - при поражении или победе
 
 int main()
 {

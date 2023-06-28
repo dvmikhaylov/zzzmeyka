@@ -1,9 +1,11 @@
+#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest.h"
-#include "main.cpp"
 
-TEST_CASE("Проверка на победу")
+
+
+TEST_CASE("РџСЂРѕРІРµСЂРєР° РЅР° РїРѕР±РµРґСѓ")
 {
-	bool finish = Check_finish(99); //отрицательный тест
+	bool finish = Check_finish(99); //РѕС‚СЂРёС†Р°С‚РµР»СЊРЅС‹Р№ С‚РµСЃС‚
 	CHECK(finish == false);
 	finish = Check_finish(100);
 	CHECK(finish == true);
@@ -11,12 +13,12 @@ TEST_CASE("Проверка на победу")
 	CHECK(finish == true);
 }
 
-TEST_CASE("Проверкка длины змейки в зависимости от кол-ва съеденных яблок")
+TEST_CASE("РџСЂРѕРІРµСЂРєР° РґР»СЏРёРЅС‹ Р·РјРµР№РєРё РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ РєРѕР»-РІР° СЃСЉРµРґРµРЅРЅС‹Р№ С„СЂСѓРєС‚РѕРІ")
 {
 	int lengh_1 = size(0);
 	int lengh_2 = size(1);
 	int lengh_3 = size(53);
 	CHECK(lengh_1 == 2);
 	CHECK(lengh_2 == 3);
-	CHECK(lengh_3 == 54); //отрицательный тест
+	CHECK(lengh_3 == 54); //РѕС‚СЂРёС†Р°С‚РµР»СЊРЅС‹Р№ С‚РµСЃС‚
 }

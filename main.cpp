@@ -242,7 +242,6 @@ void Game() {
             } while (check_apple(i));
         }
     }
-
 }
 
 //*главная функция
